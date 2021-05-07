@@ -815,10 +815,10 @@ namespace Battlehub.RTEditor
 
             LayoutInfo layout = new LayoutInfo(false,
                 new LayoutInfo(false,
-                    new LayoutInfo(new LayoutInfo(inspectorContent.transform, inspectorWd.Header, inspectorWd.Icon)),
+                    new LayoutInfo(new LayoutInfo(hierarchyContent.transform, hierarchyWd.Header, hierarchyWd.Icon)),
                     new LayoutInfo(new LayoutInfo(sceneContent.transform, sceneWd.Header, sceneWd.Icon)),
                     0.25f),
-                new LayoutInfo(new LayoutInfo(hierarchyContent.transform, hierarchyWd.Header, hierarchyWd.Icon)),
+                new LayoutInfo(new LayoutInfo(inspectorContent.transform, inspectorWd.Header, inspectorWd.Icon)), 
                 0.75f);
 
             return layout;

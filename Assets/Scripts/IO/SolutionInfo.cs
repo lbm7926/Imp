@@ -9,12 +9,12 @@ namespace Imp.solution
 	{
 		public string Name { get; set; }
 
-		public Scene Scene { get; set; }
+		//public Scene Scene { get; set; }
 
 		public List<Equipment> equipmentList { get; set; }
 	}
 
-	public class Equipment
+	public class Equipment:MonoBehaviour
 	{
 		public string Name { get; set; }
 
@@ -23,13 +23,13 @@ namespace Imp.solution
 		public Vector3 rotation { get; set; }
 	}
 
-	public class Scene
-	{
-		public string Name { get; set; }
+	//public class Scene
+	//{
+	//	public string Name { get; set; }
 
-		public Vector3 position { get; set; }
+	//	public Vector3 position { get; set; }
 
-		public Vector3 rotation { get; set; }
-	}
+	//	public Vector3 rotation { get; set; }
+	//}
 }
 

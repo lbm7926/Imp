@@ -1,5 +1,6 @@
 ﻿using Battlehub.RTCommon;
 using Battlehub.RTHandles;
+using Imp.solution;
 using UnityEngine;
 
 namespace Battlehub.RTEditor
@@ -124,9 +125,35 @@ namespace Battlehub.RTEditor
                         go.AddComponent<GameViewCamera>();
                     }
                     break;
+                #region Imp
+                case "机器人":
+                    go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    break;
+                case "总控":
+                    go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    break;
+                case "总控电气柜":
+                    go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    break;
+                case "抽拉底座":
+                    go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    break;
+                case "立体库":
+                    go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    break;
+                case "车床":
+                    go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    break;
+                case "输送机":
+                    go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    break;
+                case "铣床":
+                    go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    break;
+                    #endregion
             }
 
-            if(go != null)
+            if (go != null)
             {
                 Vector3 pivot = Vector3.zero;
                 IScenePivot scenePivot = GetScenePivot();
@@ -136,8 +163,11 @@ namespace Battlehub.RTEditor
                 }
                 go.transform.position = pivot;
                 go.AddComponent<ExposeToEditor>();
+                go.AddComponent<Equipment>();
                 go.SetActive(true);
                 m_editor.RegisterCreatedObjects(new[] { go });
+
+                //RuntimeEditor.solutionInfo.equipmentList.Add(go);
             }
             
         }

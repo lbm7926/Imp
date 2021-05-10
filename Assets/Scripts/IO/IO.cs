@@ -39,4 +39,22 @@ public class IO
         }
     }
 
+    public static SolutionInfo Load(string path)
+    {
+        SolutionInfo result;
+        try
+        {
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            using (Stream stream = new FileStream(path, FileMode.Open))
+            {
+                SolutionInfo solutionInfo = binaryFormatter.Deserialize(stream) as SolutionInfo;
+                result = solutionInfo;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        return result;
+    }
 }

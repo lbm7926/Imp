@@ -14,6 +14,7 @@ using Battlehub.RTSL;
 using SFB;
 using TriLib;
 using Imp.solution;
+using System.Collections.Generic;
 
 namespace Battlehub.RTEditor
 {
@@ -51,6 +52,7 @@ namespace Battlehub.RTEditor
     public class RuntimeEditor : RTEBase, IRuntimeEditor
     {
         public static SolutionInfo solutionInfo;
+        public static Dictionary<GameObject, Modle> modelDic = new Dictionary<GameObject, Modle>();
 
         public event RTEEvent<CancelArgs> BeforeSceneSave;
         public event RTEEvent SceneSaving;
@@ -259,29 +261,32 @@ namespace Battlehub.RTEditor
             }
         }
 
+
         public virtual void SaveScene()
         {
-            if (m_project.LoadedScene == null)
-            {
-                m_wm.CreateWindow(RuntimeWindowType.SaveScene.ToString());
-            }
-            else
-            {
-                if (IsPlaying)
-                {
-                    m_wm.MessageBox("Unable to save scene", "Unable to save scene in play mode");
-                    return;
-                }
+            #region origin
+            //if (m_project.LoadedScene == null)
+            //{
+            //    m_wm.CreateWindow(RuntimeWindowType.SaveScene.ToString());
+            //}
+            //else
+            //{
+            //    if (IsPlaying)
+            //    {
+            //        m_wm.MessageBox("Unable to save scene", "Unable to save scene in play mode");
+            //        return;
+            //    }
 
-                AssetItem scene = m_project.LoadedScene;
-                OverwriteScene(scene, error =>
-                {
-                    if (error.HasError)
-                    {
-                        m_wm.MessageBox("Unable to save scene", error.ErrorText);
-                    }
-                });
-            }
+            //    AssetItem scene = m_project.LoadedScene;
+            //    OverwriteScene(scene, error =>
+            //    {
+            //        if (error.HasError)
+            //        {
+            //            m_wm.MessageBox("Unable to save scene", error.ErrorText);
+            //        }
+            //    });
+            //}
+            #endregion
         }
 
         public void OverwriteScene(AssetItem scene, Action<Error> callback)
@@ -353,19 +358,21 @@ namespace Battlehub.RTEditor
 
         public virtual void SaveSceneAs()
         {
-            if (IsPlaying)
-            {
-                m_wm.MessageBox("Save Scene", "Scene can not be saved in playmode");
-                return;
-            }
+            #region origin
+            //if (IsPlaying)
+            //{
+            //    m_wm.MessageBox("Save Scene", "Scene can not be saved in playmode");
+            //    return;
+            //}
 
-            if (m_project == null)
-            {
-                Debug.LogError("Project Manager is null");
-                return;
-            }
+            //if (m_project == null)
+            //{
+            //    Debug.LogError("Project Manager is null");
+            //    return;
+            //}
 
-            CreateOrActivateWindow("SaveScene");
+            //CreateOrActivateWindow("SaveScene");
+            #endregion           
         }
 
 
@@ -906,11 +913,56 @@ namespace Battlehub.RTEditor
         #region IMP
         private GameObject _rootGameObject;
 
-        public virtual void NewScene()
+        /// <summary>
+        /// 新建
+        /// </summary>
+        public virtual void NewProject()
         {
 
         }
 
+        /// <summary>
+        /// 打开文件
+        /// </summary>
+        public virtual void OpenFile()
+        {
+            var openFile = StandaloneFileBrowser.OpenFilePanel("打开项目", Application.streamingAssetsPath, "", false);//System.Environment.CurrentDirectory + @"\Assets\StreamingAssets"
+
+            //需做格式判断！！！！！！！！！！！
+            if (openFile.Length > 0)
+            {
+                SolutionInfo m_solutionInfo = new SolutionInfo();
+                m_solutionInfo = IO.Load(openFile[0]);
+                saveFirstPath = openFile[0];
+
+                int count = m_solutionInfo.equipmentList.Count;
+                for (int i = 0; i < count; i++)
+                {
+                    LoadSolution(m_solutionInfo.equipmentList[i]);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 加载解决方案
+        /// </summary>
+        /// <param name="modle"></param>
+        public void LoadSolution(Modle modle)
+        {
+            GameObject m_Model = Instantiate(Resources.Load("Model/" + modle.modleName) as GameObject);
+            m_Model.name = modle.modleName;
+            m_Model.transform.position = Util.Vector3dToVector3(modle.position);
+            m_Model.transform.rotation = Quaternion.Euler(modle.rotation.x,modle.rotation.y,modle.rotation.z);
+            m_Model.AddComponent<ExposeToEditor>();
+
+            modelDic.Add(m_Model,modle);
+            solutionInfo.equipmentList.Add(modle);
+        }
+
+        /// <summary>
+        /// 导入模型
+        /// </summary>
+        /// <param name="confirm"></param>
         public virtual void ImportModel(bool confirm)
         {
             if (confirm)
@@ -934,14 +986,46 @@ namespace Battlehub.RTEditor
             return assetLoaderOptions;
         }
 
+        public string saveFirstPath;
+        /// <summary>
+        /// 保存
+        /// </summary>
         public virtual void SaveProject()
         {
+            foreach (var item in modelDic)
+            {
+                modelDic[item.Key].position =Util.Vector3ToVector3d(item.Key.transform.position);
+                modelDic[item.Key].rotation = Util.Vector3ToVector3d(item.Key.transform.rotation.eulerAngles);
+            }
 
+            if (string.IsNullOrEmpty(saveFirstPath))
+            {
+                saveFirstPath = StandaloneFileBrowser.SaveFilePanel("保存文件", Application.streamingAssetsPath, "MyProject", "imp");
+                if (!string.IsNullOrEmpty(saveFirstPath))
+                {
+                    IO.Save(saveFirstPath, solutionInfo);
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(saveFirstPath))
+                {
+                    IO.Save(saveFirstPath, solutionInfo);
+                }
+            }
         }
 
+        /// <summary>
+        /// 另存为
+        /// </summary>
         public virtual void SaveProjectAs()
         {
+            var saveFile = StandaloneFileBrowser.SaveFilePanel("另存为文件", Application.streamingAssetsPath, "MyProject", "imp");
 
+            if (!string.IsNullOrEmpty(saveFile))
+            {
+                IO.Save(saveFile, solutionInfo);
+            }
         }
 
         #endregion

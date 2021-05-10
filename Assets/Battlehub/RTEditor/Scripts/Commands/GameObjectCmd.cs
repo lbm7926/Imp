@@ -128,27 +128,35 @@ namespace Battlehub.RTEditor
                 #region Imp
                 case "机器人":
                     go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    go.name = cmd;
                     break;
                 case "总控":
                     go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    go.name = cmd;
                     break;
                 case "总控电气柜":
                     go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    go.name = cmd;
                     break;
                 case "抽拉底座":
                     go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    go.name = cmd;
                     break;
                 case "立体库":
                     go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    go.name = cmd;
                     break;
                 case "车床":
                     go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    go.name = cmd;
                     break;
                 case "输送机":
                     go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    go.name = cmd;
                     break;
                 case "铣床":
                     go = Instantiate(Resources.Load("Model/" + cmd) as GameObject);
+                    go.name = cmd;
                     break;
                     #endregion
             }
@@ -163,11 +171,20 @@ namespace Battlehub.RTEditor
                 }
                 go.transform.position = pivot;
                 go.AddComponent<ExposeToEditor>();
-                go.AddComponent<Equipment>();
+
+                Modle equipment = new Modle()
+                {
+                    modleName=go.name,
+                    position=Util.Vector3ToVector3d(go.transform.position),
+                    rotation=Util.Vector3ToVector3d(go.transform.localRotation.eulerAngles)
+                };
+                //go.AddComponent<Equipment>();
+
                 go.SetActive(true);
                 m_editor.RegisterCreatedObjects(new[] { go });
 
-                //RuntimeEditor.solutionInfo.equipmentList.Add(go);
+                RuntimeEditor.modelDic.Add(go,equipment);
+                RuntimeEditor.solutionInfo.equipmentList.Add(equipment);
             }
             
         }

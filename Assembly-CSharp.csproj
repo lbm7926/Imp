@@ -477,7 +477,9 @@
     <Compile Include="Assets\Battlehub\Utils\XmlSerializerExtensions.cs" />
     <Compile Include="Assets\Scripts\IO\IO.cs" />
     <Compile Include="Assets\Scripts\IO\SolutionInfo.cs" />
+    <Compile Include="Assets\Scripts\Measure.cs" />
     <Compile Include="Assets\Scripts\UI\MenuPanel.cs" />
+    <Compile Include="Assets\Scripts\Util.cs" />
     <Compile Include="Assets\StandaloneFileBrowser\IStandaloneFileBrowser.cs" />
     <Compile Include="Assets\StandaloneFileBrowser\Sample\BasicSample.cs" />
     <Compile Include="Assets\StandaloneFileBrowser\Sample\CanvasSampleOpenFileImage.cs" />

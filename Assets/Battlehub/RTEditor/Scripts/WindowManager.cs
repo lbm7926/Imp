@@ -66,6 +66,7 @@ namespace Battlehub.RTEditor
         void MessageBox(Sprite icon, string header, string text, DialogAction<DialogCancelArgs> ok = null);
         void Confirmation(string header, string text, DialogAction<DialogCancelArgs> ok, DialogAction<DialogCancelArgs> cancel, string okText = "OK", string cancelText = "Cancel");
         void Confirmation(Sprite icon, string header, string text, DialogAction<DialogCancelArgs> ok, DialogAction<DialogCancelArgs> cancel, string okText = "OK", string cancelText = "Cancel");
+        void Confirmation(string header, string text, DialogAction<DialogCancelArgs> ok, DialogAction<DialogCancelArgs> no, DialogAction<DialogCancelArgs> cancel, string okText = "OK", string noText = "NO", string cancelText = "Cancel");
 
         void Dialog(string header, Transform content, DialogAction<DialogCancelArgs> ok, DialogAction<DialogCancelArgs> cancel, string okText = "OK", string cancelText = "Cancel",
              float minWidth = 150,
@@ -1390,6 +1391,10 @@ namespace Battlehub.RTEditor
         {
             m_dialogManager.ShowDialog(icon, header, text, ok, okText, cancel, cancelText);
         }
+        public void Confirmation(string header, string text, DialogAction<DialogCancelArgs> ok, DialogAction<DialogCancelArgs> no, DialogAction<DialogCancelArgs> cancel, string okText = "OK", string noText = "NO", string cancelText = "Cancel")
+        {
+            m_dialogManager.ShowDialog(null, header, text, ok, okText, cancel, cancelText);
+        }
 
         public void Dialog(string header, Transform content, DialogAction<DialogCancelArgs> ok, DialogAction<DialogCancelArgs> cancel, string okText = "OK", string cancelText = "Cancel",
              float minWidth = 150,
@@ -1587,6 +1592,8 @@ namespace Battlehub.RTEditor
         {
             m_dockPanels.ForceUpdateLayout();
         }
+
+
     }
 }
 

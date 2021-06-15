@@ -116,6 +116,7 @@ namespace Battlehub.RTEditor
                 { typeof(Cubeman.CubemanUserControl), new EditorDescriptor(20, true, false) },
                 { typeof(Cubeman.GameCameraFollow), new EditorDescriptor(20, true, false) },
                 { typeof(Cubeman.GameCharacter), new EditorDescriptor(20, true, false) },
+                { typeof(Robot.RobotAxis), new EditorDescriptor(20, true, false) },
             };
         }
 

@@ -2,6 +2,7 @@
 using Battlehub.RTSL.Interface;
 using Battlehub.UIControls;
 using Battlehub.Utils;
+using HighlightingSystem;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -313,6 +314,28 @@ namespace Battlehub.RTEditor
             //sync with RunitimeSelectiom.objects because of OnBeforeSelectionChanged event
             m_treeView.SelectedItems = selectableObjects;
 
+            #region Imp
+            foreach (var item in selectableObjects)
+            {
+                Debug.Log(item.name);
+                if (item.gameObject.GetComponent<MeshRenderer>()==null)
+                {
+                    if (item.transform.GetChild(0).GetComponent<MeshRenderer>()!=null)
+                    {
+                        Transform transform = item.transform.GetChild(0);
+                        if (transform.gameObject.GetComponent<Highlighter>() == null)
+                        {
+                            transform.gameObject.AddComponent<Highlighter>().ConstantOn(Color.yellow);
+                        }
+                        else
+                        {
+                            transform.gameObject.GetComponent<Highlighter>().ConstantOn(Color.yellow);
+                        }
+                    }
+                }                
+            }
+            #endregion
+
             m_lockSelection = false;
         }
 
@@ -369,8 +392,7 @@ namespace Battlehub.RTEditor
         {
             ExposeToEditor exposeToEditor = (ExposeToEditor)e.Items[0];
             Editor.Selection.activeObject = exposeToEditor.gameObject;
-        }    
-        
+        }            
 
         protected virtual void OnItemBeginEdit(object sender, VirtualizingTreeViewItemDataBindingArgs e)
         {

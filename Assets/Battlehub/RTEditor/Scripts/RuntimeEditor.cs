@@ -918,7 +918,17 @@ namespace Battlehub.RTEditor
         /// </summary>
         public virtual void NewProject()
         {
+            if (modelDic.Count!=0)
+            {
+                foreach (var item in modelDic.Keys)
+                {
+                    Destroy(item);
+                }
 
+                solutionInfo = new SolutionInfo();
+                modelDic.Clear();
+                saveFirstPath = null;
+            }            
         }
 
         /// <summary>
@@ -927,19 +937,35 @@ namespace Battlehub.RTEditor
         public virtual void OpenFile()
         {
             var openFile = StandaloneFileBrowser.OpenFilePanel("打开项目", Application.streamingAssetsPath, "", false);//System.Environment.CurrentDirectory + @"\Assets\StreamingAssets"
-
             //需做格式判断！！！！！！！！！！！
             if (openFile.Length > 0)
             {
-                SolutionInfo m_solutionInfo = new SolutionInfo();
-                m_solutionInfo = IO.Load(openFile[0]);
-                saveFirstPath = openFile[0];
+                //打开文件前提示是否保存当前项目
+                m_wm.Confirmation("打开文件", "是否保存当前项目?", 
+                    (dialog, args) =>
+                 {
+                     //保存当前项目
+                     SaveProject();
+                     OpenFile(openFile);
+                 }, (dialog, args) => 
+                 {
+                     //不保存当前项目
+                     NewProject();
+                     OpenFile(openFile);
+                 }, "保存","不保存");               
+            }
+        }
 
-                int count = m_solutionInfo.equipmentList.Count;
-                for (int i = 0; i < count; i++)
-                {
-                    LoadSolution(m_solutionInfo.equipmentList[i]);
-                }
+        private void OpenFile(string[] openFile)
+        {
+            SolutionInfo m_solutionInfo = new SolutionInfo();
+            m_solutionInfo = IO.Load(openFile[0]);
+            saveFirstPath = openFile[0];
+
+            int count = m_solutionInfo.equipmentList.Count;
+            for (int i = 0; i < count; i++)
+            {
+                LoadSolution(m_solutionInfo.equipmentList[i]);
             }
         }
 
